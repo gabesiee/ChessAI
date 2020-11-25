@@ -1,0 +1,28 @@
+﻿<Properties StartupConfiguration="{5015B435-372A-4A83-BC2E-42954A7E8CFF}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GenerateBoard.cs">
+    <Files>
+      <File FileName="Assets/Scripts/GenerateBoard.cs" Line="15" Column="5" />
+      <File FileName="Assets/Scripts/PiecesManager.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ChessAI" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="GenerateBoard.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="515e9b73-3c70-41aa-a09b-f685be90b3c3" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
