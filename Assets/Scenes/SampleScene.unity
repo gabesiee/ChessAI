@@ -155,6 +155,14 @@ MonoBehaviour:
     type: 3}
   darkCube: {fileID: 2600643839220727779, guid: 0b6bfe9b77a645646b29f6d4d8cc1643,
     type: 3}
+  pawn: {fileID: 6768874862738124795, guid: 5d70866269dead446bc9effe252fcad0, type: 3}
+  rook: {fileID: 5153905123939719106, guid: e0eea5595c66abe438efd0d9a53da7c3, type: 3}
+  bishop: {fileID: 3901016067258560300, guid: fa6921677348d53438a171e17067895a, type: 3}
+  knight: {fileID: 1798670748523996251, guid: 6d70a0b6e7ebc2b40974c558f915fa35, type: 3}
+  queen: {fileID: 9017498583109142424, guid: 323c05617308c5f41a1b5af9e8872bab, type: 3}
+  king: {fileID: 3327426301836605874, guid: 676e16946b9b50347a71438efb68ba7b, type: 3}
+  whiteMat: {fileID: 2100000, guid: 980596fc04f83324db507408b71eaf6a, type: 2}
+  blackMat: {fileID: 2100000, guid: 6b02586d7a4a91d45a7bd883c277a8fc, type: 2}
 --- !u!4 &129199695
 Transform:
   m_ObjectHideFlags: 0
@@ -338,7 +346,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
-  m_LocalPosition: {x: 3.5, y: 5, z: -1.5}
+  m_LocalPosition: {x: 3.5, y: 6, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
