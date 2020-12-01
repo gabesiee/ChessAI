@@ -17,6 +17,12 @@ namespace ChessEngine
         ulong[] bishopBlockermasks;
         ulong[][] bishopMoveboards;
 
+        ulong[] whitePawnBlockermasks;
+        ulong[][] whitePawnMoveboards;
+
+        ulong[] blackPawnBlockermasks;
+        ulong[][] blackPawnMoveboards;
+
         delegate ulong AttackPattern(ulong position);
 
         #region Initialization
@@ -54,6 +60,8 @@ namespace ChessEngine
 
             GenerateAllRookMoveboard();
             GenerateAllBishopMoveboard();
+            GenerateAllWhitePawnMoveboard();
+            GenerateAllBlackPawnMoveboard();
         }
         #endregion
 
@@ -328,7 +336,154 @@ namespace ChessEngine
 
         #endregion
 
+        #region Pawn
+        public ulong WhitePawnBlockermask(ulong pawn)
+        {
+            ulong l1 = (pawn >> 1) & 0x7f7f7f7f7f7f7f7f;
+            ulong r1 = (pawn << 1) & 0xfefefefefefefefe;
+            ulong h1 = l1 | r1 | pawn;
+            ulong u2 = 0;
 
+            if ((pawn & 0xFF00) != 0)
+            {
+                u2 = pawn << 16;
+            }
+
+            return (h1 << 8) | u2;
+        }
+
+        public ulong[] GenerateAllWhitePawnBlockermask()
+        {
+            whitePawnBlockermasks = new ulong[64];
+            for (int i = 0; i < 64; i++)
+            {
+                whitePawnBlockermasks[i] = WhitePawnBlockermask(Util.GetBitBoardFromSquare(i));
+            }
+            return whitePawnBlockermasks;
+        }
+
+        private void GenerateAllWhitePawnMoveboard()
+        {
+            GenerateAllWhitePawnBlockermask();
+
+            whitePawnMoveboards = new ulong[64][];
+            for (int i = 0; i < 64; i++)
+            {
+                int bits = Util.CountBits(whitePawnBlockermasks[i]);
+                whitePawnMoveboards[i] = new ulong[1 << bits];
+                for (int index = 0; index < (1 << bits); index++)
+                {
+                    whitePawnMoveboards[i][index] = GetWhitePawnMoveboardFromBlockerboard(GenerateBlockerboard(index, whitePawnBlockermasks[i]), i);
+                }
+            }
+        }
+
+        private ulong GetWhitePawnMoveboardFromBlockerboard(ulong blockerboard, int square)
+        {
+            ulong up = Util.GetBitBoardFromSquare(square) << 8;
+            ulong moveBoard = blockerboard & ~up;
+
+            if ((blockerboard & up) == 0)
+            {
+                moveBoard |= up;
+
+                if ((Util.GetBitBoardFromSquare(square) & 0xFF00) != 0 && (blockerboard & (up << 8)) == 0)
+                {
+                    moveBoard |= up << 8;
+                }
+            }
+
+                return moveBoard;
+        }
+
+        public int GetWhitePawnIndexFromBoard(ulong bitboard, int square)
+        {
+            ulong blockermask = whitePawnBlockermasks[square];
+            ulong index = 0;
+            int count = 0;
+            while (blockermask != 0)
+            {
+                if ((blockermask & 0x1) == 0x1) index = ((bitboard & 0x1) << count++) | index;
+                blockermask >>= 1;
+                bitboard >>= 1;
+            }
+            return (int)index;
+        }
+
+        public ulong BlackPawnBlockermask(ulong pawn)
+        {
+            ulong l1 = (pawn >> 1) & 0x7f7f7f7f7f7f7f7f;
+            ulong r1 = (pawn << 1) & 0xfefefefefefefefe;
+            ulong h1 = l1 | r1 | pawn;
+            ulong d2 = 0;
+
+            if ((pawn & 0xFF000000000000) != 0)
+            {
+                d2 = pawn >> 16;
+            }
+
+            return (h1 >> 8) | d2;
+        }
+
+        public ulong[] GenerateAllBlackPawnBlockermask()
+        {
+            blackPawnBlockermasks = new ulong[64];
+            for (int i = 0; i < 64; i++)
+            {
+                blackPawnBlockermasks[i] = BlackPawnBlockermask(Util.GetBitBoardFromSquare(i));
+            }
+            return blackPawnBlockermasks;
+        }
+
+        private void GenerateAllBlackPawnMoveboard()
+        {
+            GenerateAllBlackPawnBlockermask();
+
+            blackPawnMoveboards = new ulong[64][];
+            for (int i = 0; i < 64; i++)
+            {
+                int bits = Util.CountBits(blackPawnBlockermasks[i]);
+                blackPawnMoveboards[i] = new ulong[1 << bits];
+                for (int index = 0; index < (1 << bits); index++)
+                {
+                    blackPawnMoveboards[i][index] = GetBlackPawnMoveboardFromBlockerboard(GenerateBlockerboard(index, blackPawnBlockermasks[i]), i);
+                }
+            }
+        }
+
+        private ulong GetBlackPawnMoveboardFromBlockerboard(ulong blockerboard, int square)
+        {
+            ulong down = Util.GetBitBoardFromSquare(square) >> 8;
+            ulong moveBoard = blockerboard & ~down;
+
+            if ((blockerboard & down) == 0)
+            {
+                moveBoard |= down;
+
+                if ((Util.GetBitBoardFromSquare(square) & 0xFF000000000000) != 0 && (blockerboard & (down << 8)) == 0)
+                {
+                    moveBoard |= down << 8;
+                }
+            }
+
+            return moveBoard;
+        }
+
+        public int GetBlackPawnIndexFromBoard(ulong bitboard, int square)
+        {
+            ulong blockermask = blackPawnBlockermasks[square];
+            ulong index = 0;
+            int count = 0;
+            while (blockermask != 0)
+            {
+                if ((blockermask & 0x1) == 0x1) index = ((bitboard & 0x1) << count++) | index;
+                blockermask >>= 1;
+                bitboard >>= 1;
+            }
+            return (int)index;
+        }
+
+        #endregion
 
         private ulong GenerateBlockerboard(int index, ulong blockermask)
         {
@@ -389,6 +544,16 @@ namespace ChessEngine
             return bishopMoveboards[square][index];
         }
 
+        public ulong GetWhitePawnMoveboard(int square, int index)
+        {
+            return whitePawnMoveboards[square][index];
+        }
+
+        public ulong GetBlackPawnMoveboard(int square, int index)
+        {
+            return blackPawnMoveboards[square][index];
+        }
+
         public int[] GetDisplayableBoard()
         {
             int[] displayableBoard = new int[64];
@@ -436,7 +601,15 @@ namespace ChessEngine
                     switch (type)
                     {
                         case PieceEnum.Pawn:
-                            throw new NotImplementedException();
+                            if ((whitePositions[type] & positionBitboard) != 0)
+                            {
+                                return GetWhitePawnMoveboard(square, GetWhitePawnIndexFromBoard(GetAll(), square)) & ~alliedPositions;
+                            }
+                            else
+                            {
+                                return GetBlackPawnMoveboard(square, GetBlackPawnIndexFromBoard(GetAll(), square)) &~alliedPositions;
+                            }
+                                
                         case PieceEnum.Knight:
                             return pieceMovements[PieceEnum.Knight][square] & ~alliedPositions;
                         case PieceEnum.Bishop:
