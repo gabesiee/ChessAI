@@ -6,7 +6,7 @@ namespace ChessEngine
     {
         static void Main(string[] args)
         {
-            Position p = new Position();
+            PiecesManager p = new PiecesManager();
             //Util.PrintBitboard(p.RookAttackPattern(0x400));
             //Util.PrintBitboard(p.GetBlockerboard(36, 0b_1011100001));
             //Console.WriteLine(p.GetRookIndexFromBoard(0b_1100000000001000001100010000100001100000000100000000100000100010, 36));

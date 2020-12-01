@@ -64,9 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GenerateBoard.cs" />
+    <Compile Include="Assets\Scripts\IteractionManager.cs" />
     <Compile Include="Assets\Scripts\PieceEnum.cs" />
     <Compile Include="Assets\Scripts\PiecesManager.cs" />
-    <Compile Include="Assets\Scripts\Position.cs" />
     <Compile Include="Assets\Scripts\Program.cs" />
     <Compile Include="Assets\Scripts\Util.cs" />
     <Reference Include="UnityEngine">
