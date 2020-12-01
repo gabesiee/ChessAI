@@ -7,16 +7,17 @@ public class InteractionManager : MonoBehaviour
 {
     Ray ray;
     RaycastHit hit;
-    Renderer objRenderer;
-    Material oldMaterial;
-    Material newMaterial;
-    GameObject obj;
     Vector3 position;
 
-    PiecesManager pm = new PiecesManager();
+    GenerateBoard gb;
 
     bool isSelected = false;
     int selectedSquare = -1;
+
+    private void Start()
+    {
+        gb = this.GetComponent<GenerateBoard>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -38,10 +39,12 @@ public class InteractionManager : MonoBehaviour
                 position = hit.transform.position;
 
                 int targetSquare = (int)((7 - position.z) * 8 + position.x);
-                if (pm.GetPossibleMoveList(selectedSquare).Contains(targetSquare))
+                if (gb.pm.GetPossibleMoveList(selectedSquare).Contains(targetSquare))
                 {
                     Debug.Log("Moving Piece");
-                    pm.MovePiece(selectedSquare, targetSquare);
+                    gb.pm.MovePiece(selectedSquare, targetSquare);
+                    gb.ClearPieces();
+                    gb.PlacePieces();
                 }
                 else
                 {
@@ -58,7 +61,7 @@ public class InteractionManager : MonoBehaviour
                 position = hit.transform.position;
                 selectedSquare = (int)((7 - position.z) * 8 + position.x);
 
-                if (pm.IsPlayableSquare(selectedSquare))
+                if (gb.pm.IsPlayableSquare(selectedSquare))
                 {
                     isSelected = true;
                 }
@@ -78,7 +81,7 @@ public class InteractionManager : MonoBehaviour
         if (isSelected)
         {
             ColorizeSquare(selectedSquare, Color.green);
-            foreach (int square in pm.GetPossibleMoveList(selectedSquare))
+            foreach (int square in gb.pm.GetPossibleMoveList(selectedSquare))
             {
                 ColorizeSquare(square, Color.blue);
             }
@@ -102,7 +105,7 @@ public class InteractionManager : MonoBehaviour
 
     void ColorizeSquare(int square, Color color)
     {
-        this.GetComponent<GenerateBoard>().cubesArray[square].GetComponent<Renderer>().material.color = color;
+        gb.cubesArray[square].GetComponent<Renderer>().material.color = color;
     }
 
 }

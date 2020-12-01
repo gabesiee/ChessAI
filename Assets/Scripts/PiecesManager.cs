@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ChessEngine
 {
-    class PiecesManager
+    public class PiecesManager
     {
         Dictionary<PieceEnum, ulong> whitePositions;
         Dictionary<PieceEnum, ulong> blackPositions;
@@ -444,7 +444,7 @@ namespace ChessEngine
                         case PieceEnum.Rook:
                             return GetRookMoveboard(square, GetRookIndexFromBoard(GetAll(), square)) & ~alliedPositions;
                         case PieceEnum.Queen:
-                            throw new NotImplementedException();
+                            return (GetBishopMoveboard(square, GetBishopIndexFromBoard(GetAll(), square)) | GetRookMoveboard(square, GetRookIndexFromBoard(GetAll(), square))) & ~alliedPositions;
                         case PieceEnum.King:
                             return pieceMovements[PieceEnum.King][square] & ~alliedPositions;
                         default:

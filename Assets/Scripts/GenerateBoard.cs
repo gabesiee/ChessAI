@@ -5,6 +5,8 @@ using ChessEngine;
 
 public class GenerateBoard : MonoBehaviour
 {
+    public PiecesManager pm = new PiecesManager();
+
     [SerializeField] private GameObject chessboard;
     [SerializeField] private GameObject lightCube;
     [SerializeField] private GameObject darkCube;
@@ -21,59 +23,28 @@ public class GenerateBoard : MonoBehaviour
     private void Start()
     {
         generateEmptyBoard();
-        initializeTheBoard();
+        PlacePieces();
     }
 
     private void generateEmptyBoard()
     {
-        String squareColor = "light";
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
                 Vector3 currentPos = new Vector3(i, 0, j);
 
-                if (j % 8 == 0)
-                {
-                    if (squareColor == "light")
-                    {
-                        squareColor = "dark";
-                    }
-                    else
-                    {
-                        squareColor = "light";
-                    }
-                }
+                GameObject cube = Instantiate(lightCube, currentPos, Quaternion.identity) as GameObject;
+                cube.transform.parent = chessboard.transform;
 
-                if (squareColor == "dark")
-                {
-                    GameObject cube = Instantiate(darkCube, currentPos, Quaternion.identity) as GameObject;
-                    cube.transform.parent = chessboard.transform;
-
-                    cubesArray[((7 - j) * 8 + i)] = cube;
-
-                    squareColor = "light";
-                }
-                else
-                {
-                    GameObject cube = Instantiate(lightCube, currentPos, Quaternion.identity) as GameObject;
-                    cube.transform.parent = chessboard.transform;
-
-                    cubesArray[((7 - j) * 8 + i)] = cube;
-
-                    squareColor = "dark";
-                }
-
+                cubesArray[((7 - j) * 8 + i)] = cube;
             }
         }
     }
 
-    private void initializeTheBoard()
+    public void PlacePieces()
     {
-        PiecesManager pos = new PiecesManager();
-
-        int[] intBoard = pos.GetDisplayableBoard();
-        //Array.Reverse(intBoard);
+        int[] intBoard = pm.GetDisplayableBoard();
 
         for (int i = 0; i < 8; i++)
         {
@@ -146,6 +117,18 @@ public class GenerateBoard : MonoBehaviour
                         break;
                 }
             }
+        }
+    }
+
+    public void ClearPieces()
+    {
+        Debug.Log("HERE");
+        GameObject[] piecesGO = GameObject.FindGameObjectsWithTag("Piece");
+
+        foreach(GameObject go in piecesGO)
+        {
+            Debug.Log(go.name);
+            Destroy(go);
         }
     }
 }
