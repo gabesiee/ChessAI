@@ -16,6 +16,8 @@ public class GenerateBoard : MonoBehaviour
     [SerializeField] private GameObject queen;
     [SerializeField] private GameObject king;
 
+    public GameObject[] cubesArray = new GameObject[64];
+
     private void Start()
     {
         generateEmptyBoard();
@@ -48,6 +50,8 @@ public class GenerateBoard : MonoBehaviour
                     GameObject cube = Instantiate(darkCube, currentPos, Quaternion.identity) as GameObject;
                     cube.transform.parent = chessboard.transform;
 
+                    cubesArray[((7 - j) * 8 + i)] = cube;
+
                     squareColor = "light";
                 }
                 else
@@ -55,8 +59,11 @@ public class GenerateBoard : MonoBehaviour
                     GameObject cube = Instantiate(lightCube, currentPos, Quaternion.identity) as GameObject;
                     cube.transform.parent = chessboard.transform;
 
+                    cubesArray[((7 - j) * 8 + i)] = cube;
+
                     squareColor = "dark";
                 }
+
             }
         }
     }

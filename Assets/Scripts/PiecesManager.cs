@@ -420,5 +420,86 @@ namespace ChessEngine
         {
             return (GetAllWhite() & Util.GetBitBoardFromSquare(square)) != 0;
         }
+
+
+        public ulong GetPossibleMoveBitboard(int square)
+        {
+            ulong positionBitboard = Util.GetBitBoardFromSquare(square);
+            foreach (PieceEnum type in (PieceEnum[])Enum.GetValues(typeof(PieceEnum)))
+            {
+                if ((whitePositions[type] & positionBitboard) != 0 || (blackPositions[type] & positionBitboard) != 0)
+                {
+                    ulong alliedPositions;
+                    if ((whitePositions[type] & positionBitboard) != 0) alliedPositions = GetAllWhite();
+                    else alliedPositions = GetAllBlack();
+
+                    switch (type)
+                    {
+                        case PieceEnum.Pawn:
+                            throw new NotImplementedException();
+                        case PieceEnum.Knight:
+                            return pieceMovements[PieceEnum.Knight][square] & ~alliedPositions;
+                        case PieceEnum.Bishop:
+                            return GetBishopMoveboard(square, GetBishopIndexFromBoard(GetAll(), square)) & ~alliedPositions;
+                        case PieceEnum.Rook:
+                            return GetRookMoveboard(square, GetRookIndexFromBoard(GetAll(), square)) & ~alliedPositions;
+                        case PieceEnum.Queen:
+                            throw new NotImplementedException();
+                        case PieceEnum.King:
+                            return pieceMovements[PieceEnum.King][square] & ~alliedPositions;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        public List<int> GetPossibleMoveList(int square)
+        {
+            List<int> moveList = new List<int>();
+            ulong bitboard = GetPossibleMoveBitboard(square);
+            for (int i = 0; i < 64; i++)
+            {
+                if ((bitboard & Util.GetBitBoardFromSquare(i)) != 0)
+                {
+                    moveList.Add(i);
+                }
+            }
+            return moveList;
+
+        }
+
+        public void MovePiece(int sourceSquare, int targetSquare)
+        {
+            ulong sourceBitboard = Util.GetBitBoardFromSquare(sourceSquare);
+            ulong targetBitboard = Util.GetBitBoardFromSquare(targetSquare);
+
+            foreach (PieceEnum type in (PieceEnum[])Enum.GetValues(typeof(PieceEnum)))
+            {
+                if ((whitePositions[type] & sourceBitboard) != 0)
+                {
+                    whitePositions[type] = whitePositions[type] & ~sourceBitboard;
+                    foreach (PieceEnum sourceType in (PieceEnum[])Enum.GetValues(typeof(PieceEnum)))
+                    {
+                        blackPositions[sourceType] = blackPositions[sourceType] & ~targetBitboard;
+                    }
+                    whitePositions[type] = whitePositions[type] | targetBitboard;
+                    return;
+                }
+
+                if ((blackPositions[type] & sourceBitboard) != 0)
+                {
+                    blackPositions[type] = blackPositions[type] & ~sourceBitboard;
+                    foreach (PieceEnum sourceType in (PieceEnum[])Enum.GetValues(typeof(PieceEnum)))
+                    {
+                        whitePositions[sourceType] = whitePositions[sourceType] & ~targetBitboard;
+                    }
+                    blackPositions[type] = blackPositions[type] | targetBitboard;
+                    return;
+                }
+            }
+        }
     }
 }
