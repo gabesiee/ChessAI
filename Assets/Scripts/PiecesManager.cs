@@ -380,16 +380,17 @@ namespace ChessEngine
 
         private ulong GetWhitePawnMoveboardFromBlockerboard(ulong blockerboard, int square)
         {
-            ulong up = Util.GetBitBoardFromSquare(square) << 8;
-            ulong moveBoard = blockerboard & ~up;
+            ulong u1 = Util.GetBitBoardFromSquare(square) << 8;
+            ulong u2 = u1 << 8;
+            ulong moveBoard = blockerboard & ~u1 & ~u2;
 
-            if ((blockerboard & up) == 0)
+            if ((blockerboard & u1) == 0)
             {
-                moveBoard |= up;
+                moveBoard |= u1;
 
-                if ((Util.GetBitBoardFromSquare(square) & 0xFF00) != 0 && (blockerboard & (up << 8)) == 0)
+                if (((Util.GetBitBoardFromSquare(square) & 0xFF00) != 0) && ((blockerboard & u2) == 0))
                 {
-                    moveBoard |= up << 8;
+                    moveBoard |= u2;
                 }
             }
 
@@ -453,16 +454,17 @@ namespace ChessEngine
 
         private ulong GetBlackPawnMoveboardFromBlockerboard(ulong blockerboard, int square)
         {
-            ulong down = Util.GetBitBoardFromSquare(square) >> 8;
-            ulong moveBoard = blockerboard & ~down;
+            ulong d1 = Util.GetBitBoardFromSquare(square) >> 8;
+            ulong d2 = d1 >> 8;
+            ulong moveBoard = blockerboard & ~d1 & ~d2;
 
-            if ((blockerboard & down) == 0)
+            if ((blockerboard & d1) == 0)
             {
-                moveBoard |= down;
+                moveBoard |= d1;
 
-                if ((Util.GetBitBoardFromSquare(square) & 0xFF000000000000) != 0 && (blockerboard & (down << 8)) == 0)
+                if (((Util.GetBitBoardFromSquare(square) & 0xFF000000000000) != 0) && ((blockerboard & d2) == 0))
                 {
-                    moveBoard |= down << 8;
+                    moveBoard |= d2;
                 }
             }
 
@@ -644,6 +646,11 @@ namespace ChessEngine
 
         }
 
+        public bool IsGameOver()
+        {
+            return whitePositions[PieceEnum.King] == 0 || blackPositions[PieceEnum.King] == 0;
+        }
+
         public void MovePiece(int sourceSquare, int targetSquare)
         {
             ulong sourceBitboard = Util.GetBitBoardFromSquare(sourceSquare);
@@ -674,5 +681,23 @@ namespace ChessEngine
                 }
             }
         }
+
+        public int GetValueOfSquare(int square)
+        {
+            ulong bitboard = Util.GetBitBoardFromSquare(square);
+            foreach (PieceEnum type in (PieceEnum[])Enum.GetValues(typeof(PieceEnum)))
+            {
+                if ((whitePositions[type] & bitboard) != 0)
+                {
+                    return type.GetValue();
+                }
+                if ((blackPositions[type] & bitboard) != 0)
+                {
+                    return -type.GetValue();
+                }
+            }
+            return 0;
+        }
+
     }
 }

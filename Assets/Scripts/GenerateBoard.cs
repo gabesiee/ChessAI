@@ -6,6 +6,7 @@ using ChessEngine;
 public class GenerateBoard : MonoBehaviour
 {
     public PiecesManager pm = new PiecesManager();
+    public AI ai;
 
     [SerializeField] private GameObject chessboard;
     [SerializeField] private GameObject lightCube;
@@ -22,6 +23,7 @@ public class GenerateBoard : MonoBehaviour
 
     private void Start()
     {
+        ai = new AI(pm);
         generateEmptyBoard();
         PlacePieces();
     }
@@ -122,12 +124,10 @@ public class GenerateBoard : MonoBehaviour
 
     public void ClearPieces()
     {
-        Debug.Log("HERE");
         GameObject[] piecesGO = GameObject.FindGameObjectsWithTag("Piece");
 
         foreach(GameObject go in piecesGO)
         {
-            Debug.Log(go.name);
             Destroy(go);
         }
     }
