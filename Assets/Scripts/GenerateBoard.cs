@@ -9,8 +9,7 @@ public class GenerateBoard : MonoBehaviour
     public AI ai;
 
     [SerializeField] private GameObject chessboard;
-    [SerializeField] private GameObject lightCube;
-    [SerializeField] private GameObject darkCube;
+    [SerializeField] private GameObject cube;
 
     [SerializeField] private GameObject pawn;
     [SerializeField] private GameObject rook;
@@ -36,10 +35,10 @@ public class GenerateBoard : MonoBehaviour
             {
                 Vector3 currentPos = new Vector3(i, 0, j);
 
-                GameObject cube = Instantiate(lightCube, currentPos, Quaternion.identity) as GameObject;
-                cube.transform.parent = chessboard.transform;
+                GameObject square = Instantiate(cube, currentPos, Quaternion.identity) as GameObject;
+                square.transform.parent = chessboard.transform;
 
-                cubesArray[((7 - j) * 8 + i)] = cube;
+                cubesArray[((7 - j) * 8 + i)] = square;
             }
         }
     }
