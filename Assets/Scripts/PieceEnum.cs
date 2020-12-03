@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ChessEngine
 {
-    enum PieceEnum
+    public enum PieceEnum
     {
         Pawn = 1,
         Knight = 2,

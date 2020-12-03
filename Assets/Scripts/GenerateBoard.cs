@@ -5,7 +5,7 @@ using ChessEngine;
 
 public class GenerateBoard : MonoBehaviour
 {
-    public PiecesManager pm = new PiecesManager();
+    public PositionManager pm = new PositionManager();
     public AI ai;
 
     [SerializeField] private GameObject chessboard;

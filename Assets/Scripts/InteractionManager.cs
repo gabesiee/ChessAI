@@ -41,7 +41,7 @@ public class InteractionManager : MonoBehaviour
                     position = hit.transform.position;
 
                     int targetSquare = (int)((7 - position.z) * 8 + position.x);
-                    if (gb.pm.GetPossibleMoveList(selectedSquare).Contains(targetSquare)) //Moving piece
+                    if (MoveManager.GetPossibleMoveList(gb.pm, selectedSquare).Contains(targetSquare)) //Moving piece
                     {
                         gb.pm.MovePiece(selectedSquare, targetSquare);
                         if (gb.pm.IsGameOver())
@@ -93,7 +93,7 @@ public class InteractionManager : MonoBehaviour
         if (isSelected)
         {
             ColorizeSquare(selectedSquare, Color.green);
-            foreach (int square in gb.pm.GetPossibleMoveList(selectedSquare))
+            foreach (int square in MoveManager.GetPossibleMoveList(gb.pm, selectedSquare))
             {
                 ColorizeSquare(square, Color.blue);
             }
