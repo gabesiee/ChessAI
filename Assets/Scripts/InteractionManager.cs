@@ -41,7 +41,7 @@ public class InteractionManager : MonoBehaviour
                     position = hit.transform.position;
 
                     int targetSquare = (int)((7 - position.z) * 8 + position.x);
-                    if (MoveManager.GetPossibleMoveList(gb.pm, selectedSquare).Contains(targetSquare)) //Moving piece
+                    if (MoveManager.GetPossibleMoveList(gb.pm, selectedSquare, true).Contains(targetSquare)) //Moving piece
                     {
                         gb.pm.MovePiece(selectedSquare, targetSquare);
                         if (gb.pm.IsGameOver())
@@ -52,10 +52,14 @@ public class InteractionManager : MonoBehaviour
                         else
                         {
                             lastAIMove = gb.ai.Play();
-                            if (gb.pm.IsGameOver())
-                            {
-                                gameOver = true;
-                                Debug.Log("AI Won !");
+                            if (gb.pm.IsCheck()) {
+                                if (MoveManager.GetAllPossibleMoves(gb.pm, true, false).Count == 0)
+                                {
+                                    gameOver = true;
+                                    Debug.Log("CHECKMATE");
+                                    Debug.Log("AI Won !");
+                                }
+                                else Debug.Log("CHECK");
                             }
                         }
                         gb.ClearPieces();
@@ -93,7 +97,7 @@ public class InteractionManager : MonoBehaviour
         if (isSelected)
         {
             ColorizeSquare(selectedSquare, Color.green);
-            foreach (int square in MoveManager.GetPossibleMoveList(gb.pm, selectedSquare))
+            foreach (int square in MoveManager.GetPossibleMoveList(gb.pm, selectedSquare, true))
             {
                 ColorizeSquare(square, Color.blue);
             }

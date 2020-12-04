@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace ChessEngine
 {
@@ -537,7 +538,7 @@ namespace ChessEngine
             return 0;
         }
 
-        static public List<int> GetPossibleMoveList(PositionManager board, int square)
+        static public List<int> GetPossibleMoveList(PositionManager board, int square, bool isPlayer)
         {
             List<int> moveList = new List<int>();
             ulong bitboard = GetPossibleMoveBitboard(board, square);
@@ -545,11 +546,39 @@ namespace ChessEngine
             {
                 if ((bitboard & Util.GetBitBoardFromSquare(i)) != 0)
                 {
-                    moveList.Add(i);
+                    if (isPlayer) //"Check" control for player only to improve ai speed 
+                    {
+                        PositionManager fictionnalBoard = new PositionManager(board);
+                        fictionnalBoard.MovePiece(square, i);
+                        if (!fictionnalBoard.IsCheck()) moveList.Add(i);
+                    }
+                    else moveList.Add(i);
                 }
             }
             return moveList;
 
+        }
+
+        static public List<(int, int)> GetAllPossibleMoves(PositionManager board, bool isPlayer, bool isFalsePlayer)
+        {
+            List<(int, int)> allPossibleMoves = new List<(int, int)>();
+
+            ulong alliedPositions = (isPlayer || isFalsePlayer) ? board.GetAllWhite() : board.GetAllBlack();
+
+            for (int i = 63; i >= 0; i--)
+            {
+                if ((alliedPositions & 1UL) == 1)
+                {
+                    List<int> possibleMoves = MoveManager.GetPossibleMoveList(board, i, isPlayer);
+                    foreach (int target in possibleMoves)
+                    {
+                        allPossibleMoves.Add((i, target));
+                    }
+                }
+                alliedPositions = alliedPositions >> 1;
+            }
+
+            return allPossibleMoves;
         }
 
 

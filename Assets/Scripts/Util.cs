@@ -25,6 +25,17 @@ namespace ChessEngine
             return 0x8000000000000000 >> square;
         }
 
+        static public int GetSquareFromBitboard(ulong bitboard)
+        {
+            int square = -1;
+            while (bitboard != 0)
+            {
+                bitboard <<= 1;
+                square++;
+            }
+            return square;
+        }
+
 
         static public int CountBits(ulong n)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace ChessEngine
 {
@@ -94,7 +95,7 @@ namespace ChessEngine
             return displayableBoard;
         }
 
-        // Fonction reservée au joueur (forcément blanc)
+        // Only for Player (white positions)
         public bool IsPlayableSquare(int square)
         {
             return (GetAllWhite() & Util.GetBitBoardFromSquare(square)) != 0;
@@ -163,6 +164,25 @@ namespace ChessEngine
             }
 
             return boardValue;
+        }
+
+        // Only for Player (white positions)
+        public bool IsCheck()
+        {
+            int kingSquare = Util.GetSquareFromBitboard(whitePositions[PieceEnum.King]);
+
+            ulong blackPositions = GetAllBlack();
+            for (int i = 63; i >= 0; i--)
+            {
+                if ((blackPositions & 1UL) == 1)
+                {
+                    if (MoveManager.GetPossibleMoveList(this, i, false).Contains(kingSquare)) return true;
+                }
+                blackPositions = blackPositions >> 1;
+
+            }
+
+            return false;
         }
     }
 }
