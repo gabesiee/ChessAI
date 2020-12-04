@@ -18,64 +18,43 @@ public class AI
 
     public (int, int) Play()
     {
-        return PlayNMoveAhead(0);
+        return PlayNMoveAhead(2);
     }
 
     private (int, int) PlayRandom()
     {
-        List<(int, int)> allPM = GetAllPossibleMoves(realBoard);
+        List<(int, int)> allPM = GetAllPossibleMoves(realBoard, realBoard.GetAllBlack());
         (int, int) move = allPM[Random.Range(0,allPM.Count)];
         realBoard.MovePiece(move.Item1, move.Item2);
         return move;
     }
 
-    /*private (int, int) PlayOneMoveAhead()
-    {
-        List<(int, int)> allPM = GetAllPossibleMoves();
-        (int, int) move = (-1, -1);
-        int bestValue = -1;
-        foreach ((int, int) iMove in allPM)
-        {
-            int iValue = board.GetValueOfSquare(iMove.Item2);
-            if (iValue == bestValue && (Random.Range(0, 2) == 0))
-            {
-                bestValue = iValue;
-                move = iMove;
-            } else if (iValue > bestValue)
-            {
-                bestValue = iValue;
-                move = iMove;
-            }
-        }
-
-        if (move != (-1, -1)) board.MovePiece(move.Item1, move.Item2); //security
-
-        return move;
-    }*/
-
     private (int, int) PlayNMoveAhead(int n)
     {
-        MoveTree moveTree = CreateMoveTree(realBoard, (-1,-1), n+1);
+        MoveTree moveTree = CreateMoveTree(realBoard, (-1,-1), n+1, true);
         (int, int) move = MiniMax(moveTree, n);
         realBoard.MovePiece(move.Item1, move.Item2);
         return move;
     }
 
 
-    private MoveTree CreateMoveTree(PositionManager board, (int, int) move, int depth)
+    private MoveTree CreateMoveTree(PositionManager board, (int, int) move, int depth, bool isBlack)
     {
 
         MoveTree moveTree = new MoveTree(board, move);
 
         if (depth == 0) return moveTree;
 
-        List <(int, int)> allPM = GetAllPossibleMoves(board);
+        ulong alliedPositions = (isBlack) ? board.GetAllBlack() : board.GetAllWhite();
+
+
+        List <(int, int)> allPM = GetAllPossibleMoves(board, alliedPositions);
 
         foreach ((int, int) iMove in allPM)
         {
             PositionManager iBoard = new PositionManager(board);
             iBoard.MovePiece(iMove.Item1, iMove.Item2);
-            moveTree.AddChild(CreateMoveTree(iBoard, iMove, depth - 1));
+            moveTree.AddChild(CreateMoveTree(iBoard, iMove, depth - 1, !isBlack));
         }
 
         return moveTree;
@@ -87,7 +66,7 @@ public class AI
         (int, int) move = (-1, -1);
         foreach (MoveTree child in moveTree.children)
         {
-            int score = Maxi(child, n - 1);
+            int score = Maxi(child, n);
             if (score == min && (Random.Range(0, 2) == 0))
             {
                 move = child.move;
@@ -130,14 +109,13 @@ public class AI
         return min;
     }
 
-    private List<(int, int)> GetAllPossibleMoves(PositionManager board)
+    private List<(int, int)> GetAllPossibleMoves(PositionManager board, ulong alliedPositions)
     {
         List<(int, int)> allPossibleMoves = new List<(int, int)>();
 
-        ulong blackPositons = board.GetAllBlack();
         for (int i = 63; i >= 0; i--)
         {
-            if ((blackPositons & 1UL) == 1)
+            if ((alliedPositions & 1UL) == 1)
             {
                 List<int> possibleMoves = MoveManager.GetPossibleMoveList(board, i);
                 foreach (int target in possibleMoves)
@@ -145,7 +123,7 @@ public class AI
                     allPossibleMoves.Add((i, target));
                 }
             }
-            blackPositons = blackPositons >> 1;
+            alliedPositions = alliedPositions >> 1;
         }
 
         return allPossibleMoves;
