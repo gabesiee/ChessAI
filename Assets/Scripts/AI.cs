@@ -35,15 +35,14 @@ public class AI
 
     private (int, int) PlayNMoveAhead(int n)
     {
-        MoveTree moveTree = CreateMoveTree(realBoard, (-1,-1), n+1, false);
+        //MoveTree moveTree = CreateMoveTree(realBoard, (-1,-1), n+1, false);
         //(int, int) move = MiniMax(moveTree, n);
-        (int, int) move = MiniMaxABPruning(moveTree, n);
+        (int, int) move = MiniMaxABPruning(n);
         realBoard.MovePiece(move.Item1, move.Item2);
         return move;
     }
 
-
-    private MoveTree CreateMoveTree(PositionManager board, (int, int) move, int depth, bool isFalsePlayer)
+    /*private MoveTree CreateMoveTree(PositionManager board, (int, int) move, int depth, bool isFalsePlayer)
     {
 
         MoveTree moveTree = new MoveTree(board, move);
@@ -61,7 +60,8 @@ public class AI
         }
 
         return moveTree;
-    }
+    }*/
+
     #region MiniMax without pruning
     private (int, int) MiniMax(MoveTree moveTree, int n)
     {
@@ -115,35 +115,47 @@ public class AI
 
 
     #region MiniMax with Alpha Beta Pruning
-    private (int, int) MiniMaxABPruning(MoveTree moveTree, int n)
+    private (int, int) MiniMaxABPruning(int n)
     {
-        int min = int.MaxValue;
         (int, int) move = (-1, -1);
-        foreach (MoveTree child in moveTree.children)
+
+        int min = int.MaxValue;
+        List<(int, int)> allPM = MoveManager.GetAllPossibleMoves(realBoard, false, false);
+        foreach ((int, int) iMove in allPM)
         {
-            int score = MaxiABPruning(child, n, int.MinValue, int.MaxValue);
+            PositionManager childBoard = new PositionManager(realBoard);
+            childBoard.MovePiece(iMove.Item1, iMove.Item2);
+            int score = MaxiABPruning(childBoard, n, int.MinValue, int.MaxValue);
             if (score == min && (Random.Range(0, 2) == 0))
             {
-                move = child.move;
+                move = iMove;
             }
             if (score < min)
             {
                 min = score;
-                move = child.move;
+                move = iMove;
             }
         }
+
+        if (min > 300) return (-1, -1);
 
         return move;
     }
 
-    private int MaxiABPruning(MoveTree moveTree, int depth, int a, int b)
+    private int MaxiABPruning(PositionManager board, int depth, int a, int b)
     {
-        if (depth <= 0 || moveTree.children.Count == 0) return moveTree.board.GetValueOfBoard();
+        if (depth <= 0) return board.GetValueOfBoard();
 
         int max = int.MinValue;
-        foreach (MoveTree child in moveTree.children)
+        List<(int, int)> allPM = MoveManager.GetAllPossibleMoves(board, false, true);
+
+        if (allPM.Count == 0) return board.GetValueOfBoard();
+
+        foreach ((int, int) iMove in allPM)
         {
-            max = Math.Max(max, MiniABPruning(child, depth - 1, a, b));
+            PositionManager childBoard = new PositionManager(board);
+            childBoard.MovePiece(iMove.Item1, iMove.Item2);
+            max = Math.Max(max, MiniABPruning(childBoard, depth - 1, a, b));
             a = Math.Max(a, max);
             
             if (a >= b) break;
@@ -152,14 +164,20 @@ public class AI
         return max;
     }
 
-    private int MiniABPruning(MoveTree moveTree, int depth, int a, int b)
+    private int MiniABPruning(PositionManager board, int depth, int a, int b)
     {
-        if (depth <= 0 || moveTree.children.Count == 0) return moveTree.board.GetValueOfBoard();
+        if (depth <= 0) return board.GetValueOfBoard();
 
         int min = int.MaxValue;
-        foreach (MoveTree child in moveTree.children)
+        List<(int, int)> allPM = MoveManager.GetAllPossibleMoves(board, false, false);
+
+        if (allPM.Count == 0) return board.GetValueOfBoard();
+
+        foreach ((int, int) iMove in allPM)
         {
-            min = Math.Min(min, Maxi(child, depth - 1));
+            PositionManager childBoard = new PositionManager(board);
+            childBoard.MovePiece(iMove.Item1, iMove.Item2);
+            min = Math.Min(min, MaxiABPruning(childBoard, depth - 1, a, b));
             b = Math.Min(b, min);
             if (b <= a) break;
         }

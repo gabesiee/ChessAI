@@ -44,24 +44,23 @@ public class InteractionManager : MonoBehaviour
                     if (MoveManager.GetPossibleMoveList(gb.pm, selectedSquare, true).Contains(targetSquare)) //Moving piece
                     {
                         gb.pm.MovePiece(selectedSquare, targetSquare);
-                        if (gb.pm.IsGameOver())
+                        
+                        lastAIMove = gb.ai.Play();
+                        if (lastAIMove == (-1, -1))
                         {
                             gameOver = true;
                             Debug.Log("Player Won !");
                         }
-                        else
-                        {
-                            lastAIMove = gb.ai.Play();
-                            if (gb.pm.IsCheck()) {
-                                if (MoveManager.GetAllPossibleMoves(gb.pm, true, false).Count == 0)
-                                {
-                                    gameOver = true;
-                                    Debug.Log("CHECKMATE");
-                                    Debug.Log("AI Won !");
-                                }
-                                else Debug.Log("CHECK");
+                        else if (gb.pm.IsCheck()) {
+                            if (MoveManager.GetAllPossibleMoves(gb.pm, true, false).Count == 0)
+                            {
+                                gameOver = true;
+                                Debug.Log("CHECKMATE");
+                                Debug.Log("AI Won !");
                             }
+                            else Debug.Log("CHECK");
                         }
+                        
                         gb.ClearPieces();
                         gb.PlacePieces();
                     }
