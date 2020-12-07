@@ -51,68 +51,68 @@ public class GenerateBoard : MonoBehaviour
         {
             for (int j = 0; j < 8; j++)
             {
-                Vector3 currentPos = new Vector3(j, 1, 7 - i);
+                Vector3 currentPos = new Vector3(j, 0, 7 - i);
 
                 switch (intBoard[i * 8 + j])
                 {
                     case 1:
-                        GameObject whitePawn = Instantiate(pawn, currentPos, Quaternion.identity) as GameObject;
+                        GameObject whitePawn = Instantiate(pawn, currentPos + Vector3.up * 1.05f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         whitePawn.name = "whitePawn";
                         whitePawn.GetComponent<Renderer>().material.color = Color.white;
 
                         break;
                     case 2:
-                        GameObject whiteKnight = Instantiate(knight, currentPos, Quaternion.identity) as GameObject;
+                        GameObject whiteKnight = Instantiate(knight, currentPos + Vector3.up * 1.35f, Quaternion.Euler(90, 90, 0)) as GameObject;
                         whiteKnight.name = "whiteKnight";
                         whiteKnight.GetComponent<Renderer>().material.color = Color.white;
                         break;
                     case 3:
-                        GameObject whiteBishop = Instantiate(bishop, currentPos, Quaternion.identity) as GameObject;
+                        GameObject whiteBishop = Instantiate(bishop, currentPos + Vector3.up * 1.22f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         whiteBishop.name = "whiteBishop";
                         whiteBishop.GetComponent<Renderer>().material.color = Color.white;
                         break;
                     case 4:
-                        GameObject whiteRook = Instantiate(rook, currentPos, Quaternion.identity) as GameObject;
+                        GameObject whiteRook = Instantiate(rook, currentPos + Vector3.up * 1.38f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         whiteRook.name = "whiteRook";
                         whiteRook.GetComponent<Renderer>().material.color = Color.white;
                         break;
                     case 5:
-                        GameObject whiteQueen = Instantiate(queen, currentPos, Quaternion.identity) as GameObject;
+                        GameObject whiteQueen = Instantiate(queen, currentPos + Vector3.up * 1.25f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         whiteQueen.name = "whiteQueen";
                         whiteQueen.GetComponent<Renderer>().material.color = Color.white;
                         break;
                     case 6:
-                        GameObject whiteKing = Instantiate(king, currentPos, Quaternion.identity) as GameObject;
+                        GameObject whiteKing = Instantiate(king, currentPos + Vector3.up * 1.5f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         whiteKing.name = "whiteKing";
                         whiteKing.GetComponent<Renderer>().material.color = Color.white;
                         break;
                     case -1:
-                        GameObject blackPawn = Instantiate(pawn, currentPos, Quaternion.identity) as GameObject;
+                        GameObject blackPawn = Instantiate(pawn, currentPos + Vector3.up * 1.05f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         blackPawn.name = "blackPawn";
                         blackPawn.GetComponent<Renderer>().material.color = Color.black;
                         break;
                     case -2:
-                        GameObject blackKnight = Instantiate(knight, currentPos, Quaternion.identity) as GameObject;
+                        GameObject blackKnight = Instantiate(knight, currentPos + Vector3.up * 1.35f, Quaternion.Euler(90, -90, 0)) as GameObject;
                         blackKnight.name = "blackKnight";
                         blackKnight.GetComponent<Renderer>().material.color = Color.black;
                         break;
                     case -3:
-                        GameObject blackBishop = Instantiate(bishop, currentPos, Quaternion.identity) as GameObject;
+                        GameObject blackBishop = Instantiate(bishop, currentPos + Vector3.up * 1.22f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         blackBishop.name = "blackBishop";
                         blackBishop.GetComponent<Renderer>().material.color = Color.black;
                         break;
                     case -4:
-                        GameObject blackRook = Instantiate(rook, currentPos, Quaternion.identity) as GameObject;
+                        GameObject blackRook = Instantiate(rook, currentPos + Vector3.up * 1.38f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         blackRook.name = "blackRook";
                         blackRook.GetComponent<Renderer>().material.color = Color.black;
                         break;
                     case -5:
-                        GameObject blackQueen = Instantiate(queen, currentPos, Quaternion.identity) as GameObject;
+                        GameObject blackQueen = Instantiate(queen, currentPos + Vector3.up * 1.25f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         blackQueen.name = "blackQueen";
                         blackQueen.GetComponent<Renderer>().material.color = Color.black;
                         break;
                     case -6:
-                        GameObject blackKing = Instantiate(king, currentPos, Quaternion.identity) as GameObject;
+                        GameObject blackKing = Instantiate(king, currentPos + Vector3.up * 1.5f, Quaternion.Euler(90, 0, 0)) as GameObject;
                         blackKing.name = "blackKing";
                         blackKing.GetComponent<Renderer>().material.color = Color.black;
                         break;
