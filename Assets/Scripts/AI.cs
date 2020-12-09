@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using ChessEngine;
 using System;
@@ -19,7 +18,7 @@ public class AI
     public (int, int) Play()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
-        (int, int) move = PlayNMoveAhead(2);
+        (int, int) move = PlayNMoveAhead(MenuManager.difficulty);
         watch.Stop();
         Debug.Log(watch.ElapsedMilliseconds);
         return move;

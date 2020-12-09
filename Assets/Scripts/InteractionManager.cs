@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using ChessEngine;
+using UnityEngine.SceneManagement;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -50,6 +49,7 @@ public class InteractionManager : MonoBehaviour
                         {
                             gameOver = true;
                             Debug.Log("Player Won !");
+                            SceneManager.LoadScene("VictoryScene");
                         }
                         else if (gb.pm.IsCheck()) {
                             if (MoveManager.GetAllPossibleMoves(gb.pm, true, false).Count == 0)
@@ -57,6 +57,7 @@ public class InteractionManager : MonoBehaviour
                                 gameOver = true;
                                 Debug.Log("CHECKMATE");
                                 Debug.Log("AI Won !");
+                                SceneManager.LoadScene("DefeatScene");
                             }
                             else Debug.Log("CHECK");
                         }
