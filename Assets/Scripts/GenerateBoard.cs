@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using ChessEngine;
 
+//Main class to instantiate visible board and all the data (AI and model board)
 public class GenerateBoard : MonoBehaviour
 {
-    public PositionManager pm = new PositionManager();
+    public PositionManager pm = new PositionManager(); // model board
     public AI ai;
 
     [SerializeField] private GameObject chessboard;

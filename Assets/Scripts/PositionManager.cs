@@ -164,7 +164,7 @@ namespace ChessEngine
             return boardValue;
         }
 
-        // Only for Player (white positions)
+        // Only for Player (white positions) as it would slow AI treatment
         public bool IsCheck()
         {
             int kingSquare = Util.GetSquareFromBitboard(whitePositions[PieceEnum.King]);

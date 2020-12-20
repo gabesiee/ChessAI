@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class AI
 {
 
-    private PositionManager realBoard;
+    private PositionManager realBoard; //actual board of the game
     
     public AI(PositionManager board)
     {
@@ -32,7 +32,7 @@ public class AI
         return move;
     }
 
-    private (int, int) PlayNMoveAhead(int n)
+    private (int, int) PlayNMoveAhead(int n) //0 move ahead is depth of 1 as it is considering only one move
     {
         //MoveTree moveTree = CreateMoveTree(realBoard, (-1,-1), n+1, false);
         //(int, int) move = MiniMax(moveTree, n);
@@ -41,6 +41,8 @@ public class AI
         return move;
     }
 
+    //Deprecated : Used to physically create tree for minimax
+    //Removed as not building the actual tree make the execution much faster
     /*private MoveTree CreateMoveTree(PositionManager board, (int, int) move, int depth, bool isFalsePlayer)
     {
 
@@ -61,6 +63,7 @@ public class AI
         return moveTree;
     }*/
 
+    // Deprecated : Even for test purpose, this method should not be used as it used method CreateMoveTree
     #region MiniMax without pruning
     private (int, int) MiniMax(MoveTree moveTree, int n)
     {
@@ -68,7 +71,7 @@ public class AI
         (int, int) move = (-1, -1);
         foreach (MoveTree child in moveTree.children)
         {
-            int score = Maxi(child, n);
+            int score = Max(child, n);
             if (score == min && (Random.Range(0, 2) == 0))
             {
                 move = child.move;
@@ -83,7 +86,7 @@ public class AI
         return move;
     }
 
-    private int Maxi(MoveTree moveTree, int depth)
+    private int Max(MoveTree moveTree, int depth)
     {
         if (depth <= 0) return moveTree.board.GetValueOfBoard();
 
@@ -104,7 +107,7 @@ public class AI
         int min = int.MaxValue;
         foreach (MoveTree child in moveTree.children)
         {
-            int score = Maxi(child, depth - 1);
+            int score = Max(child, depth - 1);
             if (score < min) min = score;
         }
 
@@ -114,6 +117,8 @@ public class AI
 
 
     #region MiniMax with Alpha Beta Pruning
+    // Minimax main function, should be the one to call in all cases
+    // Essentialy the same as MinABPruning but store the actual move
     private (int, int) MiniMaxABPruning(int n)
     {
         (int, int) move = (-1, -1);
@@ -124,8 +129,8 @@ public class AI
         {
             PositionManager childBoard = new PositionManager(realBoard);
             childBoard.MovePiece(iMove.Item1, iMove.Item2);
-            int score = MaxiABPruning(childBoard, n, int.MinValue, int.MaxValue);
-            if (score == min && (Random.Range(0, 2) == 0))
+            int score = MaxABPruning(childBoard, n, int.MinValue, int.MaxValue);
+            if (score == min && (Random.Range(0, 2) == 0))  //add random to make the AI less predictable
             {
                 move = iMove;
             }
@@ -141,7 +146,8 @@ public class AI
         return move;
     }
 
-    private int MaxiABPruning(PositionManager board, int depth, int a, int b)
+    // Max part of Minimax with AB pruning
+    private int MaxABPruning(PositionManager board, int depth, int a, int b)
     {
         if (depth <= 0) return board.GetValueOfBoard();
 
@@ -163,6 +169,7 @@ public class AI
         return max;
     }
 
+    // Min part of Minimax with AB pruning
     private int MiniABPruning(PositionManager board, int depth, int a, int b)
     {
         if (depth <= 0) return board.GetValueOfBoard();
@@ -176,7 +183,7 @@ public class AI
         {
             PositionManager childBoard = new PositionManager(board);
             childBoard.MovePiece(iMove.Item1, iMove.Item2);
-            min = Math.Min(min, MaxiABPruning(childBoard, depth - 1, a, b));
+            min = Math.Min(min, MaxABPruning(childBoard, depth - 1, a, b));
             b = Math.Min(b, min);
             if (b <= a) break;
         }

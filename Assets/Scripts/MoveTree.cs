@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ChessEngine;
 
+//Deprecated : model of choice tree for old minimax implementation. should not be used as creating tree slow down treatment
 public class MoveTree
 {
 

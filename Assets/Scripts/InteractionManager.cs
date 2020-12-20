@@ -2,6 +2,7 @@
 using ChessEngine;
 using UnityEngine.SceneManagement;
 
+//Manage interactions from player and game cycle
 public class InteractionManager : MonoBehaviour
 {
     Ray ray;
@@ -44,8 +45,8 @@ public class InteractionManager : MonoBehaviour
                     {
                         gb.pm.MovePiece(selectedSquare, targetSquare);
                         
-                        lastAIMove = gb.ai.Play();
-                        if (lastAIMove == (-1, -1))
+                        lastAIMove = gb.ai.Play(); // Make the AI play
+                        if (lastAIMove == (-1, -1)) // if AI can't play
                         {
                             gameOver = true;
                             Debug.Log("Player Won !");
@@ -88,7 +89,7 @@ public class InteractionManager : MonoBehaviour
     {
         ColorizeDefaultBoard();
 
-        if (lastAIMove != (-1, -1))
+        if (lastAIMove != (-1, -1)) // colorize the last AI move
         {
             ColorizeSquare(lastAIMove.Item1, Color.yellow);
             ColorizeSquare(lastAIMove.Item2, Color.yellow);
@@ -96,10 +97,10 @@ public class InteractionManager : MonoBehaviour
 
         if (isSelected)
         {
-            ColorizeSquare(selectedSquare, Color.green);
+            ColorizeSquare(selectedSquare, Color.green); //colorize the selected piece
             foreach (int square in MoveManager.GetPossibleMoveList(gb.pm, selectedSquare, true))
             {
-                ColorizeSquare(square, Color.blue);
+                ColorizeSquare(square, Color.blue); //colorize the possible move
             }
         } else if (selectedSquare >= 0)
         {

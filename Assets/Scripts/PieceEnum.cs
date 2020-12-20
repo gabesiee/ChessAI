@@ -6,6 +6,7 @@ namespace ChessEngine
 {
     public enum PieceEnum
     {
+        //id value
         Pawn = 1,
         Knight = 2,
         Bishop = 3,
@@ -20,6 +21,7 @@ namespace ChessEngine
 
         public static int GetValue(this PieceEnum p)
         {
+            //score value
             switch (p)
             {
                 case PieceEnum.Pawn:

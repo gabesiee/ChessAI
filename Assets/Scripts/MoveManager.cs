@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
+// Moveboard generation class and request method
 namespace ChessEngine
 {
     public static class MoveManager
